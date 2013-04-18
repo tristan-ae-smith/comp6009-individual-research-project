@@ -16,7 +16,12 @@ Thomas Smith\\
 
 \maketitle
 \begin{abstract}
-This is where the abstract goes
+Modern computer games make use of a wide variety of procedural content generation (PCG) techniques that serve a number of purposes during the development of a game. 
+Improve variety, allow developers to populate large areas, allow customisation to player preferences, reduce assets, allow control/tweaking, reduce labor costs
+Automating content generation, or augmenting manual content production
+
+
+% Hundreds of millions of people play computer games every day. For them, game content–from 3D objects to abstract puzzles– plays a major entertainment role. Manual labor has so far ensured that the quality and quantity of game content matched the demands of the playing community, but is facing new scalability challenges due to the exponential growth over the last decade of both the gamer population and the production costs. Procedural Content Generation for Games (PCG-G) may address these challenges by automating, or aiding in, game content generation. PCG-G is difficult, since the generator has to create the content, satisfy constraints imposed by the artist, and return interesting instances for gamers. Despite a large body of research focusing on PCG-G, particularly over the past decade, ours is the first comprehensive survey of the field of PCG-G. We first introduce a comprehensive, six-layered taxonomy of game content: bits, space, systems, scenarios, design, and derived. Second, we survey the methods used across the whole field of PCG-G from a large research body. Third, we map PCG-G methods to game content layers; it turns out that many of the methods used to generate game content from one layer can be used to generate content from another. We also survey the use of methods in practice, that is, in commercial or prototype games. Fourth and last, we discuss several directions for future research in PCG-G, which we believe deserve close attention in the near future.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -29,25 +34,40 @@ This is where the abstract goes
 % \keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
 
 \section{Introduction}
-Intoduction to the topic, explanation of lack of structure. Reference to the age of things, elete, nethack, increasing use in successful commercial games. The need for procedural content generation.
+Intoduction to the topic, explanation of lack of structure. Reference to the age of things, Elite\cite{elite}, nethack, increasing use in successful commercial games. The need for procedural content generation.
 
 \section{Background}
+Building on the work of Hendrikx et. al \cite{hendrikx2012procedural} this paper provides a modern overview of the range of procedural content generation techniques used in games today.
+\subsection{Methodology}
+Given the broad range of procedural content techniques, this review organises approaches first by the primary user of each method. Lists a number of the main purposes that PCG is used for within that category, along with examples and academic literature in that area.
+
 
 \section{Artists}
 %methods and results
+When producing the raw content that goes into a game, procedural generation techniques can provide a more efficient method or greater variety than building everything by hand. Many of these techniques are not unique to the field of computer games and are also used to produce computer-generated graphics for all kinds of media, from animated movies to photorealistic bcakgrounds in advertisements and print media.
 
 \subsubsection{Textures}
+
 Perlin Noise
 Grammars
+Long history of using perlin noise effects for material textures. Originally developed by Ken Perlin in <year>, it provides <definition>. Used for everything from clouds to marble.
+Pattern-based textures. Ideal for providing high-resolution texturing across large landscapes. Algorithmically generates textures with specified features, useful for either repetetive applications such as hich-rise city blocks or aperiodic such as natural landscapes \cite{patternTextures}
 \subsubsection{Models}
+visual variety, procedural construction
+fill space - speedtree\cite{speedtree}, procedural cities
 Borderland's guns
 Grammars
 Speedtree
 \subsubsection{Animation}
-Spore
+Rather than create animations for all possibilites (counterexample - assassins creed 3 had <number> of distinct animations)
+Respond to conditions that weren't known at design time: user content generation - Spore\cite{Spore}, allows charaters to react to a vast range of physical conditions - Jedi Unleashed force push, Emotion engine.
 \subsubsection{Effects}
+Procedural generation of environmental effects such as fire, water, smoke and clouds. Provides believable variety (starter point for citations in \cite{hendrikx2012procedural})
 Particles
 GAR?
+Procedural rendering effects - allows graphical styles that are radically distinct from traditional photorealistic techniques \cite{kowalski1999art}
+\subsubsection{Music}
+Allows great variety - specify a style, and get infinite variations. \cite{collins2009introduction} <Does this belong in designers? often reacts to in-games event, used to build mood>
 
 %comparison and evaluation of approaches
 \subsection{Benefits}
@@ -58,12 +78,10 @@ Download sizes - procedural variation - Borderland's enemies
 %methods and results
 
 \subsection{Varieties}
-\subsubsection{Content}
+\subsubsection{Content scale}
 Speedtree
-\subsubsection{Balancing}
-Adaptible
-\subsubsection{Motivation}
-Radiant Story?
+\subsubsection{Replayability}
+\subsubsection{Challenge}
 
 %comparison and evaluation of approaches
 \subsection{Benefits}
@@ -72,14 +90,23 @@ Radiant Story?
 \section{Users}
 %methods and results
 
+\subsubsection{Experience}
 Valve's AI Director
 Bethesda's Radiant Storytelling
+\subsubsection{Agency}
+Typically, no direct player control over adaptive generation (cite hamlet)
+however, in some games that make use of procedural generation it can be a benefit to give the player some degree of direct control over the generation process - for example a recent addition to the GAR was the `'Weapons Lab', a portion of the game where players may spend in-game resources to customise their procedurally-generated weapons. (cite GAR's weapons lab)
+Radiant Story?
+GAR's weapons lab
 
 %comparison and evaluation of approaches
 \subsection{Benefits}
 \subsubsection{Future work}
+player control over procedural content generation
 
+\section{Conclusion}
 % a comparison and evaluation of approaches, and an indication of the outstanding, unsolved, issues and problems.
+We can see that a variety of <stakeholders> benefit from the improvement of procedural content techniques, and that there are a wide range of existing techniques used for a plethora of different reasons.
 
 %ACKNOWLEDGMENTS are optional
 % \section{Acknowledgments}
