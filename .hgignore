@@ -3,6 +3,5 @@ syntax: glob
 *.aux
 *.log
 *.fdb_latexmk
-*.synctex.gz
 *.bbl
 *.blg
