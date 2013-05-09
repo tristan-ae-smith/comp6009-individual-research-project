@@ -143,10 +143,10 @@ In contrast to the procedurally generated content developed by artists, which ty
 %methods and results
 
 \subsection{Content Types}
-Designers make use of PCG to provide varied and interesting play spaces in a multitude of ways. Sample PCG approaches for some of the most common aspects of play spaces are detailed below:
+Designers make use of PCG to provide varied and interesting play spaces in a multitude of ways. Sample PCG approaches for some of the most common aspects of playspaces are detailed below:
 
 \subsubsection{Enclosed Environments}
-Many games incorporate some manner of enclosed environments where the gameplay is highly influenced by the topology of the playspace -- these could be anything from caves to pinball tables to temples to racetracks. Whether 2D or 3D, it is generally necessary that the environment fulfils a certain set of minimum constraints so that it is fit for purpose -- often including the requirement that the final output contain at least one entrance and exit, and that the space between them is ultimately traversable. The specific method used to generate an enclosed environment and then evaluate the output is typically highly domain dependent, though some general approaches do exist. The component-assembly method described in section~\ref{sec:artist-approaches} is a common starting-point, often combined with prior route setup \cite{smith2011launchpad}. Variants exist that offer `mixed-initiative' development -- the ability for human designers to intervene and modify the developing level at any point without disrupting the PCG algorithm \cite{mawhorter2010procedural}. Another approach suitable to more natural-looking enclosed environments is the use of cellular automata to erode randomly-seeded maps in an iterative fashion, generating extensive, tunable cave systems \cite{johnson2010cellular}. For simpler applications, A$^*$ search is a basic traversability evaluator, though domain knowledge may allow more efficient approaches in many cases.
+Many games incorporate some manner of enclosed environments where the gameplay is highly influenced by the topology of the playspace -- these could be anything from caves to pinball tables to temples to racetracks. Whether 2D or 3D, it is generally necessary that the environment fulfils a certain set of minimum constraints so that it is fit for purpose -- often including the requirement that the final output contain at least one entrance and exit, and that the space between them is ultimately traversable. The specific method used to generate an enclosed environment and then evaluate the output is typically highly domain dependent, though some general approaches do exist. The component-assembly method described in section~\ref{sec:artist-approaches} is a common starting-point, often combined with advanced route creation in order to ensure an interesting and feasible path exists through the level \cite{smith2011launchpad}. Variants exist that offer `mixed-initiative' development -- the ability for human designers to intervene and modify the developing level at any point without disrupting the PCG algorithm \cite{mawhorter2010procedural}. Another approach suitable to more natural-looking enclosed environments is the use of cellular automata to erode randomly-seeded maps in an iterative fashion, generating extensive, tunable cave systems \cite{johnson2010cellular}. For simpler applications, A$^*$ search is a basic traversability evaluator, though domain knowledge may allow more efficient approaches in many cases.
 
 \subsubsection{Open Environments}
 Open environments differ from enclosed environments primarily in that they constrain gameplay to a lesser degree, and in turn are less constrained by it. Open environments are generally considerably more sparse and rarely unsatisfiable in any sense -- rather, in this context PCG techniques are primarily used to provide believable variety for the form and content of the playspace, and must be of sufficient quality to do so. A wide range of techniques exist to generate many kinds of terrain, and existing noise and network creation techniques may be used to specify land cover features such as woodland, roads and rivers \cite{raffe2012survey,perlin2002improving}. A number of similar techniques have been developed to populate urban environments with realistic transport infrastructure and buildings \cite{carli2011survey}. Again, approaches have been developed that allow human designers to influence the generation of content in support of particular goals, either through the introduction of \textit{semantic constraints} that express localised intent \cite{smelik2011semantic}, or by introducing broader \textit{objectives} that specify purpose for the generated environment \cite{togelius2010towards}.
@@ -168,24 +168,28 @@ An extension of the generate-and-test approach, search-based PCG evaluates candi
 \subsubsection{Mixed-Initiative Creation}
 Another common feature of some of the PCG approaches surveyed is the provision for human designers to directly influence the generation of content and therefore the ultimate output of the system. This is known as mixed-initiative creation as it allows the provision of hand-generated set pieces \cite{smith2010tanagra}, level features \cite{mawhorter2010procedural} or constraints \cite{smelik2011semantic} by a human developer, and then uses the PCG system to fill in the blanks and weave the provided parts into a coherent whole. These systems are also capable of allowing live editing after generation, and warning the developer if the resulting level fails any of a number of satisfiability constraints.
 
+\newpage
 \subsection{Benefits}
-Speed up work - large, believable diverse playspaces\\
+The use of PCG techniques by designers in industry is typically on an as-needed basis. Though entire games could be constructed around a single robust PCG mechanic, in the more general case there will be one or two facets of a game that receive specific advantages due to the use of PCG techniques. Most commonly, these benefits will be one or more of the following:
+% speed up work - large, believable diverse playspaces\\
 
 
-\subsubsection{Content scale}
-Use of PCG allows designers to populate large game spaces with a high level of detail and variety. Middleware packages such as Speedtree\cite{speedtree} allow entire forests to be generated and customised, and similar approaches exist for generating believable cities and landscapes.
-``A Survey of Procedural Terrain Generation Techniques using Evolutionary Algorithms'' \cite{raffe2012survey}
-A survey of procedural content generation techniques suitable to game development \cite{carli2011survey}
+\subsubsection{Content Scale}
+PCG techniques allow designers to generate and then populate vast game spaces with a high level of both detail and variety. Middleware packages such as Speedtree\cite{speedtree} allow entire forests to be generated and customised, and similar approaches exist for generating believable cities and landscapes \cite{carli2011survey}. The use of online PCG systems for environment generation allows the creation of `borderless' playspaces, that continually generate new content on-the-fly whenever a boundary is approached \cite{mario}.
+% ``A Survey of Procedural Terrain Generation Techniques using Evolutionary Algorithms'' \cite{raffe2012survey}
 
-\subsubsection{Replayability}
-The use of <semi-random> techniques means that play-spaces generated using PCG may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of discovery and exploration each time.
+\subsubsection{Replay Value}
+The use of stochastic PCG techniques for environment generation means that play-spaces may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of discovery and exploration each time \cite{hendrikx2012procedural}. Some games make the original seed value for each world available to share, allowing parallel exploration.
 
 \subsubsection{Challenge}
 On of the main factors that affects players' enjoyment of games is their ability to remain in a state of `flow' - the sensation that their abilities are matched to the challenge provided by the game \cite{flow}.
-In order to cater to the wide range in ability of players that each game may attract, many games have previously offered the option of customising the challenge experienced to one of a number of pre-set `difficulty levels'. <Read through 3yp for citations on difficulties with self-assessment and mutability>. Rather than <set> the degree of challenge at design time, Lopes et al. show that it is possible to adaptively generate or alter aspects of the game \cite{lopes2011adaptivity} in order to match the observed ability of the player \cite{ResE5}.
+In order to cater to the wide range in ability of players that each game may attract, many games have previously offered the option of customising the challenge experienced to one of a number of pre-set `difficulty levels'. 
+% <Read through 3yp for citations on difficulties with self-assessment and mutability>. 
+Rather than specify the degree of challenge at design time, Lopes et al. show that it is possible to adaptively generate or alter aspects of the game \cite{lopes2011adaptivity} in order to match the observed ability of the player \cite{ResE5}.
 
-\section{Future work}
-Improve automated critics \cite{hendrikx2012procedural}
+\subsection{Future work}
+Improve automated critics \cite{hendrikx2012procedural}.\\
+Better player modelling.
 
 \newpage
 \section{Users}
@@ -193,7 +197,7 @@ Improve automated critics \cite{hendrikx2012procedural}
 close the gap between designer and player - allow modification based on individual information about the player.
 
 \cite{sorenson2010towards}
-
+\subsection{Content Types}
 \subsubsection{Experience}
 Valve's AI Director \cite{valve}
 Bethesda's Radiant Storytelling \cite{radiant}
@@ -205,15 +209,18 @@ GAR's weapons
 Choose ladders in Rathenn \cite{smith2011pcg}
 Inside a star-filled sky citation in \cite{smith2011pcg}
 
+\subsection{Approaches}
 %comparison and evaluation of approaches
+The Big AI\\
+Player as input parameter to adaptive PCG
 \subsection{Benefits}
-Users get a more engaging experience that can be tailored specifically to their preferences and abilities
-\subsubsection{Future work}
+Users get a more engaging and immersive experience that can be tailored specifically to their preferences and abilities
+\subsection{Future Work}
 % player control over procedural content generation
 
 \section{Conclusion}
 % a comparison and evaluation of approaches, and an indication of the outstanding, unsolved, issues and problems.
-We can see that a variety of <stakeholders> benefit from the improvement of procedural content techniques, and that there are a wide range of existing techniques used for a plethora of different reasons.
+We can see that a variety of <stakeholders> benefit from the improvement of procedural content techniques, and that there are a wide range of existing techniques used for a plethora of different reasons. Nitwit Blubber Oddment Tweak
 
 %ACKNOWLEDGMENTS are optional
 % \section{Acknowledgments}
