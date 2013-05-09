@@ -153,9 +153,10 @@ Open environments differ from enclosed environments primarily in that they const
 
 
 \subsubsection{Entity Behaviours}
+\label{sec:GAR1}
 In addition to the generation of more concrete content types, PCG techniques may be used to manipulate the behaviours of entities within the game. This can be done in real time, in order to progressively modify a character's responses to the player, as in the interactive drama Fa{\c{c}}ade \cite{mateas2007writing}, or it may be integrated into entity development in order to provide enemy and ally characters with a range of believable fighting styles, as in the FPS Killzone \cite{straatman2005killzone}.
 PCG techniques can also be used to ensure that the challenge presented by enemies can scale with the power of the player character, by generating enemies with appropriate power levels \cite{hamlet}. A model of some facet of the player is constructed through observation, and then processed by a machine learning algorithm in order to modulate the output of an adaptive procedural generator \cite{lopes2011adaptivity}. A full discussion of player-adaptive techniques for PCG is beyond the scope of this paper, however.
-Some modern games also procedurally generate the behaviour and appearance of non-character entities, particularly weapons. Both Borderlands (Gearbox Software, 2009) and Galactic Arms Race (Evolutionary Games, 2010) make use of runtime PCG techniques in order to provide an almost limitless variety of weapons with a range of effects, potencies and appearances.
+Some modern games also procedurally generate the behaviour and appearance of non-character entities, particularly weapons. Both Borderlands (Gearbox Software, 2009) and Galactic Arms Race (GAR, Evolutionary Games, 2010) make use of runtime PCG techniques in order to provide an almost limitless variety of weapons with a range of effects, potencies and appearances. Interestingly, Borderlands uses the component-assembly method to provide visuals for the weapons, and a deterministic generator to specify their behaviours, while GAR uses particle system visuals and an evolutionary algorithm to generate behaviours.
 
 \subsection{Approaches}
 %comparison and evaluation of approaches
@@ -179,13 +180,14 @@ PCG techniques allow designers to generate and then populate vast game spaces wi
 % ``A Survey of Procedural Terrain Generation Techniques using Evolutionary Algorithms'' \cite{raffe2012survey}
 
 \subsubsection{Replay Value}
-The use of stochastic PCG techniques for environment generation means that play-spaces may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of discovery and exploration each time \cite{hendrikx2012procedural}. Some games make the original seed value for each world available to share, allowing parallel exploration.
+The use of stochastic PCG approaches for environment generation means that playspaces may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of discovery and exploration each time \cite{hendrikx2012procedural}. Some games make the original seed value for each world available to share, allowing parallel exploration.
 
-\subsubsection{Challenge}
+\subsubsection{Challenge Adjustment}
+\label{sec:DDA}
 On of the main factors that affects players' enjoyment of games is their ability to remain in a state of `flow' - the sensation that their abilities are matched to the challenge provided by the game \cite{flow}.
 In order to cater to the wide range in ability of players that each game may attract, many games have previously offered the option of customising the challenge experienced to one of a number of pre-set `difficulty levels'. 
 % <Read through 3yp for citations on difficulties with self-assessment and mutability>. 
-Rather than specify the degree of challenge at design time, Lopes et al. show that it is possible to adaptively generate or alter aspects of the game \cite{lopes2011adaptivity} in order to match the observed ability of the player \cite{ResE5}.
+Rather than specify the degree of challenge at design time, it is possible to adaptively generate or alter aspects of the game \cite{lopes2011adaptivity} in order to match the observed ability of the player \cite{ResE5}.
 
 \subsection{Future work}
 Improve automated critics \cite{hendrikx2012procedural}.\\
@@ -194,18 +196,30 @@ Better player modelling.
 \newpage
 \section{Users}
 %methods and results
-close the gap between designer and player - allow modification based on individual information about the player.
+With the advent of PCG algorithms efficient enough to be executed online during gameplay, a new form of input for adaptive PCG has become available: the actions of the player may be used to influence the output of the PCG system.
+The ability for PCG content to respond in some way to the user helps to close the gap between designer and player, and allows modification of the game state tailored to individual information about the player \cite{sorenson2010towards}.
 
-\cite{sorenson2010towards}
 \subsection{Content Types}
+Users may influence generated content in a number of ways. Where the purpose of player-adaptive PCG is to tailor the experience to some aspect of the player, then the user's influence is likely to be indirect and ideally go unnoticed \cite{citeulike:7364450}. Alternatively, directly player-adaptive PCG systems may be used as a form of user-driven content generation, in order to increase the player's perceived agency within the world \cite{bartle2004designing}.
+%TODO: say why either of these might not be PCG
+
 \subsubsection{Experience}
-Valve's AI Director \cite{valve}
-Bethesda's Radiant Storytelling \cite{radiant}
+Many games have used the availability of player information during runtime in order to procedurally generate experiences that are tailored specifically to certain aspects of the current player. The dynamic difficulty adjustments mentioned in section~\ref{sec:DDA} are a basic example of this process, however the concept supports many other interesting opportunities, especially when combined with decision-making techniques from the field of AI. 
+
+For example Valve's AI Director \cite{valve}, as seen in co-operative zombie shooters `Left 4 Dead' (Valve Software, 2008) and `Left 4 Dead 2' (Valve Software, 2009), is an artificial intelligence system that maintains a model of each player's \textit{emotional intensity} and then uses PCG techniques to effect wide-ranging changes across each scenario in order to provide a dynamic challenge. It is able to affect the spawn rates and location of enemies, the lighting, the weather and even the layout of the level in order to heighten tension and maintain challenge.
+
+Another system that generates content influenced by a model of the player is Bethesda's Radiant Storytelling system \cite{radiant} as used in `Skyrim' (Bethesda Softworks, 2011). Skyrim is a vast open-world game that uses exploration as a primary gameplay mechanic, and the Radiant Storytelling system maintains a model of interesting locations that the player has not yet visited. Whenever the player interacts with any designated Radiant Questgiver NPC, the system procedurally generates a new mission designed to draw the player to an unvisited location. Depending on the nature of the template selected for the quest, this can involve replacing the inhabitants of the target location with some hostile creature type, or ensuring that a particular named NPC or item is spawned at pre-designated spots in that location. The Radiant system is designed to provide a natural and engaging flow between locations in the game world
+
+A more academic investigation of these techniques is provided by Nitsche et al. in their game Charbitat \cite{charbitat}. Charbitat is an open-world exploration game in which the world itself is generated in response to the player's actions. The tiles of the world each have elemental affinities to certain degrees, and whenever a new tile it generated its nature is determined by a combination of the natures of the adjoining tiles and the elemental nature of the player character, which varies according to the players actions. Thus players may deliberately but indirectly influence the nature of the world that is generated in response to their actions.
+
+\label{sec:GAR2}
+Finally, GAR (see section~\ref{sec:GAR1}) uses an evolutionary algorithm to breed new varieties of weapons system. The breeding system keeps track of which weapons are most used by the player, and accords these individuals preferential selection, resulting in a population which tailors itself over time towards the weapon types most favoured by the player - with occasional mutants injected to prevent homogenisation.
+
 \subsubsection{Agency}
-Typically, no direct player control over adaptive generation \cite{hamlet}
-however, in some games that make use of procedural generation it can be a benefit to give the player some degree of direct control over the generation process - for example a recent addition to the GAR was the `'Weapons Lab', a portion of the game where players may spend in-game resources to customise their procedurally-generated weapons. (cite GAR's weapons lab)
-Radiant Story?
-GAR's weapons
+Typically, players have no direct control over adaptive generation, as TODO \cite{hamlet}
+However, in some games that make heavy use of procedural generation, giving the player some degree of direct control over the generation process can improve their perception of their agency within the world \cite{bartle2004designing}.
+ - for example a recent addition to the GAR was the `'Weapons Lab', a portion of the game where players may spend in-game resources to customise their procedurally-generated weapons. (cite GAR's weapons lab)
+Spore creature creation
 Choose ladders in Rathenn \cite{smith2011pcg}
 Inside a star-filled sky citation in \cite{smith2011pcg}
 
@@ -213,12 +227,14 @@ Inside a star-filled sky citation in \cite{smith2011pcg}
 %comparison and evaluation of approaches
 The Big AI\\
 Player as input parameter to adaptive PCG
+User-driven content generation
+
 \subsection{Benefits}
 Users get a more engaging and immersive experience that can be tailored specifically to their preferences and abilities
 \subsection{Future Work}
 % player control over procedural content generation
 
-\section{Conclusion}
+\section{Conclusions}
 % a comparison and evaluation of approaches, and an indication of the outstanding, unsolved, issues and problems.
 We can see that a variety of <stakeholders> benefit from the improvement of procedural content techniques, and that there are a wide range of existing techniques used for a plethora of different reasons. Nitwit Blubber Oddment Tweak
 
