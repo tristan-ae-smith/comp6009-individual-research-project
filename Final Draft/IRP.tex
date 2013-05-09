@@ -1,5 +1,6 @@
 \documentclass{acm_proc_article-sp}
 \usepackage{graphicx}
+\usepackage{multirow}
 
 \begin{document}
 
@@ -17,7 +18,7 @@ Thomas Smith\\
 
 \maketitle
 \begin{abstract}
-Modern computer games make use of a wide variety of procedural content generation (PCG) techniques that serve a number of purposes during the development of a game. Though PCG techniques have been used since some of the earliest computer games\cite{elite}, they are now becoming increasing relevant as AAA games become larger and more detailed and indie games teams become smaller. PCG techniques can easily amplify production efforts by automating asset generation or augmenting manual content production, and they can be a powerful tool to allow developers to create and populate varied and believable playspaces. They can also play a role in customising each player's experience to improve engagement and entertainment. This paper provides a high-level classification of a range of techniques used for different types of content, and attempts to discern common aspects and transferable approaches that can help to promote a more unified, standard approach to content generation for games. 
+Modern computer games make use of a wide variety of procedural content generation (PCG) techniques that serve a number of purposes during both the development and execution of a game. This paper provides a high-level classification of a range of techniques used for different types of content, and attempts to discern common aspects and transferable approaches that can help to promote a more unified, standard approach to content generation for games. 
 
 
 % Improve variety, allow developers to populate large areas, allow customisation to player preferences, reduce assets, allow control/tweaking, reduce labor costs
@@ -35,89 +36,175 @@ Modern computer games make use of a wide variety of procedural content generatio
 % Hundreds of millions of people play computer games every day. For them, game content–from 3D objects to abstract puzzles– plays a major entertainment role. Manual labor has so far ensured that the quality and quantity of game content matched the demands of the playing community, but is facing new scalability challenges due to the exponential growth over the last decade of both the gamer population and the production costs. Procedural Content Generation for Games (PCG-G) may address these challenges by automating, or aiding in, game content generation. PCG-G is difficult, since the generator has to create the content, satisfy constraints imposed by the artist, and return interesting instances for gamers. Despite a large body of research focusing on PCG-G, particularly over the past decade, ours is the first comprehensive survey of the field of PCG-G. We first introduce a comprehensive, six-layered taxonomy of game content: bits, space, systems, scenarios, design, and derived. Second, we survey the methods used across the whole field of PCG-G from a large research body. Third, we map PCG-G methods to game content layers; it turns out that many of the methods used to generate game content from one layer can be used to generate content from another. We also survey the use of methods in practice, that is, in commercial or prototype games. Fourth and last, we discuss several directions for future research in PCG-G, which we believe deserve close attention in the near future.
 \end{abstract}
 
-% A category with the (minimum) three required fields
-% \category{H.4}{Information Systems Applications}{Miscellaneous}
-%A category including the fourth, optional field follows...
-% \category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+\category{K.8.0}{Personal Computing}{General}[Games]
 
-% \terms{Theory}
+\terms{Algorithms, Design, Standardization}
 
-% \keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
+\keywords{Procedural generation, game development}
 
 \section{Introduction}
-Intoduction to the topic, explanation of lack of structure. Reference to the age of things, Elite\cite{elite}, nethack, increasing use in successful commercial games. The need for procedural content generation.
 
-\subsection{Background}
-Building on the work of Hendrikx et. al \cite{hendrikx2012procedural} this paper provides a modern overview of the range of procedural content generation techniques used in games today.
+Though procedural content generation (PCG) techniques have been used since some of the earliest computer games \cite{elite}, they are now becoming increasing relevant as AAA games become larger and more detailed and indie games teams become smaller. PCG techniques can easily amplify production efforts by automating asset generation or augmenting manual content production, and they can be a powerful tool to allow developers to create and populate varied and believable playspaces. They can also play a role in customising each player's experience to improve engagement and entertainment. 
+
+However, the wide range of possible applications for PCG has lead to an extraordinary variety of approaches from both academia and industry. Despite the extensive research undertake over three decades, there are still no general purpose procedural game content generators, or even standard approaches to common requirements. Typically, individual procedural content generators are bespoke approaches used to provide a specific type of content for a particular application, though as this paper shows there are a number of particular algorithms often used as starting-points for these solutions.
+
+\subsection{What is PCG?}
+% One of the problems facing serious researchers into PCG is that the field itself is impossible to define. One might as well ask the same question about birds - what are birds? We just don't know.
+One of the problems facing researchers into PCG is the difficulty in defining the field itself.
+Hendrikx et al. describe it as ``the application of computers to generate game content, distinguish interesting instances among the ones generated, and select entertaining instances on behalf of the players.'' \cite{hendrikx2012procedural}, however this definition does not cover simple unevaluated or human-evaluated content such as deterministic methods, or tools used by artists during development, and does not suggest how entertainment may be evaluated. Another definition is provided by Togelius et al.: ``[PCG is] the algorithmical creation of game content with limited or indirect user input.'' \cite{togeliusPCGdef}. They also note that this definition does not specify the presence or absence of adaptivity or randomness, as PCG methods might be both, either or none. This definition hinges on what is understood by the phrase ``game content'', as many modern approaches to PCG could be said to generate more general game `experiences' than the traditionally-understood `content'.
+
+\subsection{Online vs. Offline}
+One of the most easily available classifiers of PCG approaches is whether the content generation is performed \textit{offline}, during the development of the game or as it loads, or \textit{online} as a result of player actions \cite{togelius2011search}. Originally, PCG algorithms ran offline due to the processing load they incurred. If used during development, the results can be baked into the game's data and shipped - this saves artists' and designers' labour during development, while still allowing fine-tuned control over the final output. Alternatively, content could be generated as a game or level loaded - meaning that the result could vary between different players and different playthroughs, and reducing the storage needed for game content. However, progress has led to faster algorithms that are capable of running during gameplay and generating new content on-the-fly; for example to generate more content whenever the boundaries of existing content are approached. The development of online PCG is more demanding than offline versions, as the available processing resources are more constrained, and algorithms must have a predictable runtime, however it brings advantages in the form of the ability for the PCG to adapt to varying game states.
+
 \subsection{Methodology}
-Given the broad range of procedural content techniques, this review organises approaches first by the primary user of each method. Lists a number of the main purposes that PCG is used for within that category, along with examples and academic literature in that area.
+Given the broad range of procedural content techniques, there are a number of different categorisations possible. Hendrikx et al.\ provide a taxonomy that describes content in terms of how it is formed - a heirarchy is presented in which upper classes may be built using elements from lower ones (Table~\ref{tab:hendrikx}).
+This review organises approaches first by the primary user of each method - Artists, Designers and finally Users. This leads to a natural progression from primarily-offline approaches to more recent online algorithms. Each section details a number of the main purposes that PCG is used for within that category, along with examples and academic literature in that area. Since in some areas there are an abundance of similar methods references to surveys have been preferred where possible, with papers on specific techniques occasionally used if they also provide a broader overview of their area, or illustrate an uncommon approach.
 
+\begin{table}[!ht]
+  \begin{tabular}{r|l}
+  Content class		& Content type examples\\
+  \hline 
+   \\[-2ex]
+  Derived Content	& News and Broadcasts, Leaderboards\\ [.5ex]
+  Game Design		& System Design, World Design\\ [.5ex]
+  Game Scenarios	& Puzzles, Storyboards, Story, Levels\\ [.5ex]
+  \multirow{2}{*}{Game Systems}
+  					& Ecosystems, Road Networks,\\
+  					& Urban Environments, Entity Behaviour\\ [.5ex]
+  Game Space		& Indoor/Outdoor Maps, Bodies of Water\\ [.5ex]
+  \multirow{2}{*}{Game Bits}
+  					& Textures, Sound, Vegetation, Buildings,\\
+  					& Behaviour, Fire, Water, Stone \& Clouds\\ [-2ex]
+  \end{tabular}
+  \caption{Taxonomy provided by Hendrikx et al. \cite{hendrikx2012procedural}}
+  \label{tab:hendrikx}
+\end{table}
 
 \section{Artists}
 %methods and results
-When producing the raw content that goes into a game, procedural generation techniques can provide a more efficient method or greater variety than building everything by hand. Many of these techniques are not unique to the field of computer games and are also used to produce computer-generated graphics for all kinds of media, from animated movies to photorealistic bcakgrounds in advertisements and print media.
+Artists have benefited greatly from the development of PCG techniques, as they can be used work more efficiently by automating generation of many content types, and can produce a wider range of outputs by automating the creation of variants. A number of techniques have arisen to generate realistic non-repeating textures, assemble a range of varied models from component parts, intelligently animate character skeletons, produce realistic and varied visual effects, and even supply cue-dependent responsive music. Many of these methods are not unique to the field of computer games, and have been adopted to produce computer-generated graphics for all kinds of media, from animated movies to photo-realistic CGI backgrounds in advertisements and print media. Part of the reason for these techniques' popularity in other fields is the fact that they are about automating the construction of essentially static resources - all either run offline during development, or have no effect on gameplay. 
+
+\subsection{Content types}
+Artists make use of PCG to streamline the workload involved in producing a wide range of content types, and common approaches have emerged for some of the most typical use cases, as detailed below:
 
 \subsubsection{Textures}
+Some of the most common approaches for procedural texture construction are pseudo-random number generators such as Perlin noise, algorithmic approaches for specific repeating effects, and image filtering for pattern-based textures.
+Games in particular have a long history of using Perlin noise and similar effects for procedural material textures. Originally developed by Ken Perlin for the motion picture industry, it provides natural appearing textures via a deterministic process. With careful tuning of parameters, it may be used for a range of applications, from clouds to stone to wood to marble \cite{perlin2002improving}.
+In contrast, a number of other algorithmic approaches have been developed for generating repeating textures such as the windows on high-rise tower blocks, segments of steel plating or stretches of road. Some of these have been adapted to provide non-repeating high-resolution texturing for rolling natural landscapes and backdrops via image filtering \cite{patternTextures}.
+While procedural texture generation is most usually undertaken offline for artists during development, online algorithms exist that allow comparatively unskilled players to automatically generate suitable textures with limited interaction \cite{DeBry:2007:PPT:1278780.1278878}.
 
-Perlin Noise
-Grammars
-Long history of using perlin noise effects for material textures. Originally developed by Ken Perlin in <year>, it provides <definition>. Used for everything from clouds to marble.
-Pattern-based textures. Ideal for providing high-resolution texturing across large landscapes. Algorithmically generates textures with specified features, useful for either repetetive applications such as hich-rise city blocks or aperiodic such as natural landscapes \cite{patternTextures}
 \subsubsection{Models}
-visual variety, procedural construction
-fill space - speedtree\cite{speedtree}, procedural cities
-Borderland's guns
-Grammars
-Speedtree
+% visual variety, procedural construction
+% fill space - speedtree\cite{speedtree}, procedural cities \cite{carli2011survey}
+% Borderland's guns TODO
+% Grammars - SpeedRock \cite{dart2011speedrock}
+% Speedtree
+Creating a modular `kit' of compatible reusable model components is a common technique to reduce artist workloads and increase available variety, however with the addition of procedural arrangement algorithms large parts of the process can be automated and hundreds of unique `individuals' created with comparatively little effort. Such approaches often define generative grammars such as L-systems to ensure individual validity, and include refinement passes to improve the quality of generated output \cite{dart2011speedrock}. One popular example of these systems is Speedtree - a commercial middleware product capable of generating many varieties of realistic foliage, from single bushes to entire forests \cite{speedtree}.
+
 \subsubsection{Animation}
-Rather than create animations for all possibilites (counterexample - assassins creed 3 had <number> of distinct animations)
-Respond to conditions that weren't known at design time: user content generation - Spore\cite{Spore}, allows charaters to react to a vast range of physical conditions - Jedi Unleashed force push, Emotion engine.
+% Rather than create animations for all possibilities (counterexample - assassins creed 3 had <number> of distinct animations)
+% Respond to conditions that weren't known at design time: user content generation - Spore\cite{Spore}, allows characters to react to a vast range of physical conditions - Jedi Unleashed force push, Emotion engine.
+The production of skeletal animations for modern 3D games is a time-consuming process -- modern games have thousands of animations, and often use PCG techniques in order to automate parts of the work involved in ensuring characters behave realistically. Given known finish and start states for key animations provided by hand or motion capture, a combination of interpolation and physics-aware PCG methods can be used to generate all of the transitions between pairs of animation states \cite{ac3}.
+In addition to the offline process, some games also use an online PCG system that intelligently blends animations and ragdoll behaviours in order provide entities with fluid and realistic reactions to unexpected situations. One of the best known such systems is Euphoria, an animation engine that uses a skeletomuscular simulation to generate realistic animation of characters at runtime \cite{motion2006euphoria}.
+A number of approaches also use PCG to develop animations for contexts and conditions that could not have been known at design time, typically in cases where there is a degree of user-driven content generation \cite{horswill2009lightweight,Perlin:2008:FVP:1401843.1401854}.
+
 \subsubsection{Effects}
-Procedural generation of environmental effects such as fire, water, smoke and clouds. Provides believable variety (starter point for citations in \cite{hendrikx2012procedural})
-Particles
-Generation of effects representing spells and weapons allows customisation based upon the properties of the ability \cite{particles}
-Procedural rendering effects - allows graphical styles that are radically distinct from traditional photorealistic techniques \cite{kowalski1999art}
+% Procedural generation of environmental effects such as fire, water, smoke and clouds. Provides believable variety (starter point for citations in \cite{hendrikx2012procedural})
+% Particles
+% Generation of effects representing spells and weapons allows customisation based upon the properties of the ability \cite{particles}
+% Procedural rendering effects - allows graphical styles that are radically distinct from traditional photo-realistic techniques \cite{kowalski1999art}
+In contrast to the typically-offline approaches presented so far, many PCG techniques exist that are designed to display interseting visual effects at runtime. The artist's role when using these systems will be to tune parameters of the PCG system in order to produce the desired effect, such as fire, water, smoke or clouds. The use of PCG to generate and tune such effects provides believable variety, and can give an additional degree of control in comparison to pure particle systems -- which in themselves are a form of stochastic procedural modelling \cite{reeves1983particle}. By specifying the generation of such effects at runtime, it is possible to create effects that respond dynamically to their contexts, or evolve based upon external factors \cite{particles}.
+Another class of effects possible via PCG is the procedural manipulation of the scene during rendering in order to create graphical styles that are radically different from traditional photo-realistic techniques -- such as the tufted truffala trees of Dr. Seuss \cite{kowalski1999art}.
+
+
 \subsubsection{Music}
-Allows great variety - specify a style, and get infinite variations. \cite{collins2009introduction} <Does this belong in designers? often reacts to in-games event, used to build mood>
+As with other content types discussed thus far, the application of PCG techniques to existing approaches to producing music for videogames allows a vast increase in the variety of content available for the same initial investment. Music in games is often cued to player actions, however storage available for individual themes is finite, and so melodies may become repetitive if the same track is triggered many times throughout the course of a game \cite{collins2009introduction}. One approach to solving the occurrences of repetitive music is the use of online transformational algorithms that are able to restructure tracks or alter overall pitch or tempo at runtime, often in response to specific aspects of the context in which the track is played. Another more complex technique involves building bespoke compositions for individual situations from a selection of precomposed components. By providing a generative grammar and a library of smaller tune fragments tagged to fit specific themes, sound designers are able to produce far greater expressive variety and avoid the issues caused by limited musical palette. This approach also lends itself to greater integration between the musical soundscape and the players actions, as the music is able to reflect several aspects of the context simultaneously \cite{6266725}.
+
+\subsection{Approaches}
+Though there are a wide range of techniques, including many unique cases that defy categorisation, it can be seen that the PCG systems used by artists fall broadly into two principal classes. On the one hand are the approaches that are purely algorithmic, as with the Perlin-generated textures and the particle-based effects. These achieve efficiencies in both workflow and storage requirements by specifying a reusable generation system and then only the sets of parameters needed to generate the specific desired content. Contrast to these the approaches that begin with a kernel of hand-generated components, and procedurally assemble these modules and refine the output. Examples of this class are the pattern-based textures, grammar-based model constructors and blended music. These approaches have the effect of magnifying the small pool of original content into a range of varied outputs.
+Despite the differences in implementation, the common underlying intention of the two approaches leads to a number of similarities between them. None of the methods described have any automatic evaluation component, as it is assumed that human evaluation by the artists using the techniques will always be possible, and have superior results. The majority of them are designed to be used offline during development -- where this is not the case, they are either tuned during development and have no impact on gameplay, as is the case with procedural effects and music, or where they are designed for user interaction they are typically made as foolproof as possible, and have minimal effect on gameplay.
 
 %comparison and evaluation of approaches
 \subsection{Benefits}
-Two of the main benefits associated with artists' use of PCG techniques are the reduction in labor required to make a large variety of variations on a them, and the reduced storage requirement to represent this variets. This is becoming increasingly relevant as games become larger and the status quo shifts from physical to digital distribution - smaller games means faster delivery
-Download sizes - procedural variation - Borderland's enemies
-\subsubsection{Future work}
+Two of the main benefits associated with artists' use of PCG techniques are the reduction in labour required to make a large variety of variations on a them, and the reduced storage requirement to represent this variance. By replacing hundreds of textures, models or animations with a set of components and a system for assembling them into content, the size of necessary assets can be dramatically reduced. `.kkrieger', a recent demoscene FPS game, uses entirely procedurally generated assets and requires under 100KB of storage \cite{kkrieger}. This is becoming increasingly relevant as games become larger and the status quo shifts from physical media to digital distribution - smaller games means faster delivery and less bandwidth costs. %Everything old is new again
+% Download sizes - procedural variation - Borderland's enemies
+% When producing the raw content that goes into a game, procedural generation techniques can provide a more efficient method or greater variety than building everything by hand. 
 
+\subsection{Future Work}
+Though PCG is currently effectively used by artists both in the games industry and other digital media fields, there are a number of known issues and other ways in which existing approaches may be refined or improved upon. Amongst the algorithmic approaches, it can be difficult for artists to correct a generated texture that is almost but not quite fit for purpose. Exposed algorithm parameters do not usually provide the fine degree of control that might be necessary, and while manual correction of the texture is always possible during development, such edits would be lost if the texture is regenerated or needs to be generated during runtime.
+Another issue for some content types is the challenge of producing interesting, unique content. For many content types such as textures and foliage, a range of slightly varied repetitions on a theme are precisely what is needed. However for in-game audio the goal is to combine the available fragments in fresh ways to avoid repetition -- the difficulties in doing so effectively are the main reason transformational approaches are currently preferred \cite{collins2009introduction}.
+Finally, a opportunity for the field in general is the standardisation of approaches to generative grammar PCG systems. Though SpeedTree provides a commercially-available middleware solution, it is restricted to the generation of foliage only, and other more typical solutions in this area are bespoke approaches -- highly dependant upon the nature of the problem being solved, the flavour of generative grammar chosen, and the domain-specific grammar itself.
+
+
+\newpage
 \section{Designers}
+In contrast to the procedurally generated content developed by artists, which typically has no direct effect on gameplay, the PCG techniques used by designers are generally oriented towards producing content that will have direct in-game effects during runtime. Though PCG techniques can be used to generate swathes of content in a more efficient manner than was previously possible, it also brings other, more valuable benefits to designers. The addition of a stochastic component to most approaches means that output may vary dramatically between one execution and the next, providing greater replayability. However, this comes at the cost of being unable to fully evaluate the output of the generator during development. Unless the system is simple enough that its entire expressive range is known to be usable, there is a risk of \textit{catastrophic failure} \cite{togelius2011search}. To combat this, online PCG approaches that can impact gameplay typically follow a `generate-and-test' pattern, whereby each generator includes an evaluator for valid content, and output that fails evaluation is rejected and regenerated.
 %methods and results
 
-\subsection{Varieties}
+\subsection{Content Types}
+Designers make use of PCG to provide varied and interesting play spaces in a multitude of ways. Sample PCG approaches for some of the most common aspects of play spaces are detailed below:
+
+\subsubsection{Enclosed Environments}
+Many games incorporate some manner of enclosed environments where the gameplay is highly influenced by the topology of the playspace -- these could be anything from caves to pinball tables to temples to racetracks. Whether 2D or 3D, it is generally necessary that the environment fulfils a certain set of minimum constraints so that it is fit for purpose -- often including the requirement that the final output contain at least one entrance and exit, and that the space between them is ultimately traversable. The specific method used to generate an enclosed environment and then evaluate the output is typically highly domain dependent, though some general approaches do exist. The component-assembly method described in section~\ref{sec:artists} is a common starting-point, often combined with prior route setup \cite{smith2011launchpad}. Variants exist that offer `mixed-initiative' development -- the ability for human designers to intervene and modify the developing level at any point without disrupting the PCG algorithm \cite{mawhorter2010procedural}
+
+caves \cite{johnson2010cellular}
+
+\subsubsection{Open Environments}
+Sparse - terrain, space
+cities \cite{carli2011survey}
+multiobjective map\cite{togelius2010towards}
+
+terrain \cite{raffe2012survey}
+
+semantic constraints \cite{smelik2011semantic}
+
+\subsubsection{Entity Behaviours}
+
+Fa{\c{c}}ade: \cite{mateas2007writing}
+
+\subsection{Approaches}
+%comparison and evaluation of approaches
+\subsubsection{Search-Based PCG}
+
+\subsubsection{Mixed-Initiative Creation}
+\cite{mawhorter2010procedural}
+\cite{smith2010tanagra}
+
+\subsection{Benefits}
+Speed up work - large, believable diverse playspaces\\
+close the gap between designer and player - allow modification based on individual information about the player.
+
 \subsubsection{Content scale}
 Use of PCG allows designers to populate large game spaces with a high level of detail and variety. Middleware packages such as Speedtree\cite{speedtree} allow entire forests to be generated and customised, and similar approaches exist for generating believable cities and landscapes.
+``A Survey of Procedural Terrain Generation Techniques using Evolutionary Algorithms'' \cite{raffe2012survey}
+A survey of procedural content generation techniques suitable to game development \cite{carli2011survey}
 
 \subsubsection{Replayability}
-The use of <semi-random> techniques means that play-spaces genearted using PCG may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of diecovery and exploration each time.
+The use of <semi-random> techniques means that play-spaces generated using PCG may be different for each player, and for each player's playthrough of a game. The variety ensures that content is fresh each time, and minimises the effects of repetition - players are not able to memorise the precise route through each dungeon and locations of treasures, and so there is a sense of discovery and exploration each time.
 
 \subsubsection{Challenge}
-On of the main factors that affects players' enjoment of games is their ability to remain in a state of `flow' - the sensation that their abilities are matched to the challenge provided by the game\cite{flow}.
-In order to cater to the wide range in ability of players that each game may attract, many games have previously offered the option of customising the challenge experienced to one of a number of pre-set `difficulty levels'. <Read through 3yp for citations on difficulties with self-assessment and mutability>. Rather than <set> the degree of challenge at design time, Lopes et al. show that it is possible to adaptively generate or alter aspects of the game\cite{lopes2011adaptivity} in order to match the observed ability of the player\cite{ResE5}.
+On of the main factors that affects players' enjoyment of games is their ability to remain in a state of `flow' - the sensation that their abilities are matched to the challenge provided by the game \cite{flow}.
+In order to cater to the wide range in ability of players that each game may attract, many games have previously offered the option of customising the challenge experienced to one of a number of pre-set `difficulty levels'. <Read through 3yp for citations on difficulties with self-assessment and mutability>. Rather than <set> the degree of challenge at design time, Lopes et al. show that it is possible to adaptively generate or alter aspects of the game \cite{lopes2011adaptivity} in order to match the observed ability of the player \cite{ResE5}.
 
-%comparison and evaluation of approaches
-\subsection{Benefits}
-Speed up work - large, beliveable diverse playspaces\\
-close the gap between designer and player - allow modification based on individual information about the player.
-\subsubsection{Future work}
+\section{Future work}
 Improve automated critics \cite{hendrikx2012procedural}
 
+\newpage
 \section{Users}
 %methods and results
 
+\cite{sorenson2010towards}
+
 \subsubsection{Experience}
-Valve's AI Director
-Bethesda's Radiant Storytelling
+Valve's AI Director \cite{valve}
+Bethesda's Radiant Storytelling \cite{radiant}
 \subsubsection{Agency}
-Typically, no direct player control over adaptive generation (cite hamlet)
+Typically, no direct player control over adaptive generation \cite{hamlet}
 however, in some games that make use of procedural generation it can be a benefit to give the player some degree of direct control over the generation process - for example a recent addition to the GAR was the `'Weapons Lab', a portion of the game where players may spend in-game resources to customise their procedurally-generated weapons. (cite GAR's weapons lab)
 Radiant Story?
 GAR's weapons
+Choose ladders in Rathenn \cite{smith2011pcg}
+Inside a star-filled sky citation in \cite{smith2011pcg}
 
 %comparison and evaluation of approaches
 \subsection{Benefits}
@@ -131,7 +218,9 @@ We can see that a variety of <stakeholders> benefit from the improvement of proc
 
 %ACKNOWLEDGMENTS are optional
 % \section{Acknowledgments}
-
+% \newpage
+% \section{dummy}
+\newpage
 \bibliographystyle{abbrv}
 \bibliography{IRP}
 %\balancecolumns
